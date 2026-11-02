@@ -101,7 +101,7 @@ module "podman" {
 
   containers = {
     pihole = {
-      image       = "docker.io/pihole/pihole:${var.pihole_version}"
+      image       = "docker.io/pihole/pihole:${var.pihole_version}@${var.image_digest}"
       volumes     = ["pihole:/etc/pihole"]
       environment = local.environment
       extra       = ["Network=host"]

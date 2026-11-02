@@ -13,7 +13,7 @@ variable "pihole_password" {
 }
 
 module "pihole" {
-  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.0"
+  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.1"
 
   hosts                = { dns = "192.168.1.2" }
   ssh_private_key_file = "~/.ssh/id_ed25519"
@@ -59,7 +59,7 @@ web_port       = "127.0.0.1:8080"
 Pi-hole has two official ways in: its installer script, and the `pihole/pihole` image. This circuit uses the image, for three reasons.
 
 - **One pin covers everything.** Pi-hole is three projects: the core scripts, the web interface and FTL, the DNS server. An image tag such as `2026.10.0` fixes all three. The installer can be fetched from a tag, but it then clones the core and web repositories from their main branches and downloads FTL's latest release, so two hosts installed a week apart can differ.
-- **Upgrades are a diff.** Change `pihole_version`, and `conn3x plan` shows the new image in the unit file. The apply restarts the service on the new image, and gravity, the query log and settings stay in the `pihole` volume. With the installer, an upgrade is `pihole -up`, which moves to whatever is latest.
+- **Upgrades are a diff.** Change `pihole_version` and `image_digest`, and `conn3x plan` shows the new image in the unit file. The apply restarts the service on the new image, and gravity, the query log and settings stay in the `pihole` volume. With the installer, an upgrade is `pihole -up`, which moves to whatever is latest.
 - **The same on every distribution.** The installer supports Debian, Ubuntu, Fedora and CentOS Stream, but not Rocky Linux or AlmaLinux. Podman is in all of their repositories.
 
 The container uses the host's network rather than a published port, so Pi-hole's query log shows each device's own address, and `listening_mode` and `interface` refer to the host's real interfaces.
@@ -101,6 +101,7 @@ Blocklists the circuit adds carry the comment `Managed by Conn3x`. Lists you add
 | `ssh_become` | bool | `false` | Run commands as root through sudo. Set it when `ssh_user` isn't root. |
 | `web_password` | string | Required | Password for the web interface and the API, 8 characters or more. Ephemeral and sensitive: it reaches the host's env file but never the plan or state. Changing it restarts the container. |
 | `pihole_version` | string | `"2026.10.0"` | Tag of `docker.io/pihole/pihole`. `2026.10.0` is Pi-hole core v6.5, web v6.6.1 and FTL v6.8. |
+| `image_digest` | string | The digest of `2026.10.0` | Digest of the image. Podman pulls by the digest, so set it whenever you change `pihole_version`. |
 | `upstream_dns` | list(string) | `["9.9.9.9", "149.112.112.112"]` | Servers Pi-hole forwards allowed queries to, optionally with `#port`, such as `"127.0.0.1#5335"` for a local Unbound. The default is Quad9. |
 | `listening_mode` | string | `"LOCAL"` | `LOCAL` answers devices on the host's own subnets, `SINGLE` only queries arriving on `interface`, `BIND` binds to `interface` alone, `ALL` answers anyone who can reach port 53, and `NONE` leaves it to you. |
 | `interface` | string | `null` | Interface for `SINGLE` and `BIND`, such as `"eth0"` or `"lo"`. When null, Pi-hole uses the one with the default route. |

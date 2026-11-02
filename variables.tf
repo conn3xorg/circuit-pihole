@@ -127,3 +127,14 @@ variable "web_port" {
     error_message = "web_port takes Pi-hole's webserver.port syntax, such as \"8080\", \"127.0.0.1:8080\" or \"80o,443os\"."
   }
 }
+
+variable "image_digest" {
+  type        = string
+  default     = "sha256:d34134716fc32038b052a8674c7c6879e0ff21f0e6d8af345166fffa2c27c113"
+  description = "Digest of the image for pihole_version. Podman pulls by the digest, so change it with the version."
+
+  validation {
+    condition     = can(regex("^sha256:[a-f0-9]{64}$", var.image_digest))
+    error_message = "image_digest must be a digest, such as \"sha256:45ed...\"."
+  }
+}
