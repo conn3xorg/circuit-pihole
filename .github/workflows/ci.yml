@@ -84,6 +84,8 @@ jobs:
           curl -sf -X POST http://127.0.0.1:8080/api/auth -d '{"password":"correct-horse-battery"}' | grep -q '"valid":true'
           curl -s -X POST http://127.0.0.1:8080/api/auth -d '{"password":"wrong-password"}' | grep -q '"valid":false'
           EOF
+      - name: Check the unit pulls the image by digest
+        run: sudo podman exec circuit-pihole sh -c 'grep -q "^Image=.*@sha256:" /etc/containers/systemd/*.container'
       - name: Clean up
         if: always()
         working-directory: examples/local
