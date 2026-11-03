@@ -72,6 +72,9 @@ jobs:
           conn3x init
           conn3x apply -auto-approve
           conn3x plan -detailed-exitcode
+          # The example's secrets reach the host write-only, so none of them
+          # may show up in state.
+          if grep -qF -e correct-horse-battery terraform.tfstate; then echo "A secret is in state." >&2; exit 1; fi
       # dig and curl come with the Pi-hole image, which shares the host's
       # network, so 127.0.0.1 is the host container's.
       - name: Check blocking, resolving, local records, the blocklist and the API
