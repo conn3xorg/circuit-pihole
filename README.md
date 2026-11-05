@@ -15,7 +15,7 @@ variable "pihole_password" {
 }
 
 module "pihole" {
-  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.1"
+  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.2"
 
   hosts                = { dns = "192.168.1.2" }
   ssh_private_key_file = "~/.ssh/id_ed25519"
