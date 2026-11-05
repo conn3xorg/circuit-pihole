@@ -15,7 +15,7 @@ variable "pihole_password" {
 }
 
 module "pihole" {
-  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.2"
+  source = "github.com/conn3xorg/circuit-pihole?ref=v0.1.3"
 
   hosts                = { dns = "192.168.1.2" }
   ssh_private_key_file = "~/.ssh/id_ed25519"
@@ -62,7 +62,7 @@ Pi-hole has two official ways in: its installer script, and the `pihole/pihole` 
 
 - **One pin covers everything.** Pi-hole is three projects: the core scripts, the web interface and FTL, the DNS server. An image tag such as `2026.10.0` fixes all three. The installer can be fetched from a tag, but it then clones the core and web repositories from their main branches and downloads FTL's latest release, so two hosts installed a week apart can differ.
 - **Upgrades are a diff.** Change `pihole_version` and `image_digest`, and `conn3x plan` shows the new image in the unit file. The apply restarts the service on the new image, and gravity, the query log and settings stay in the `pihole` volume. With the installer, an upgrade is `pihole -up`, which moves to whatever is latest.
-- **The same on every distribution.** The installer supports Debian, Ubuntu, Fedora and CentOS Stream, but not Rocky Linux or AlmaLinux. Podman is in all of their repositories.
+- **The same on every distribution.** Pi-hole's installer doesn't support Rocky Linux or AlmaLinux. Podman is in the repositories of every distribution this circuit runs on.
 
 The container uses the host's network rather than a published port, so Pi-hole's query log shows each device's own address, and `listening_mode` and `interface` refer to the host's real interfaces.
 
