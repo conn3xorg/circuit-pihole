@@ -113,7 +113,7 @@ jobs:
         run: *use
       # A fresh host gets the previous image, then the circuit's own pin is
       # applied over it, the way someone raises pihole_version. The image
-      # records its own tag in PIHOLE_DOCKER_TAG.
+      # labels itself with its version.
       - name: Upgrade from Pi-hole 2026.09.0 on a fresh host, then plan again with no changes
         working-directory: examples/local
         env:
@@ -124,11 +124,11 @@ jobs:
           ./up.sh
           conn3x init
           conn3x apply -auto-approve -var pihole_version=2026.09.0 -var image_digest=sha256:5b9c8cf51de7d6d3f2240dbe72baf5f06e1fd39cb4d77a99fab4fa13e23bd1be
-          tag() { sudo podman exec circuit-pihole podman exec pihole printenv PIHOLE_DOCKER_TAG; }
-          [ "$(tag)" = 2026.09.0 ]
+          tag() { sudo podman exec circuit-pihole podman inspect pihole --format '{{index .Config.Labels "org.opencontainers.image.version"}}'; }
+          v=$(tag); [ "$v" = 2026.09.0 ] || { echo "Pi-hole runs image $v, not 2026.09.0" >&2; exit 1; }
           conn3x apply -auto-approve
           conn3x plan -detailed-exitcode
-          [ "$(tag)" = 2026.10.0 ]
+          v=$(tag); [ "$v" = 2026.10.0 ] || { echo "Pi-hole runs image $v, not 2026.10.0" >&2; exit 1; }
       - name: Check blocking, resolving, local records, the blocklist and the API after the upgrade
         run: *use
       - name: Clean up
