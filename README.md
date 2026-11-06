@@ -72,7 +72,7 @@ On each host, in order:
 
 1. Writes `/etc/systemd/resolved.conf.d/conn3x-pihole.conf` with `DNSStubListener=no`, and restarts `systemd-resolved` if it's running. Its stub listener holds port 53 on `127.0.0.53` and `127.0.0.54`, and Pi-hole can't start while it does. resolved keeps running for everything else. On a host without resolved, such as Rocky Linux, the file sits unused.
 2. If `/etc/resolv.conf` points at resolved's stub, points it at `/run/systemd/resolve/resolv.conf`, which lists the real upstream servers. Without this the host loses DNS when the stub goes, and can't pull Pi-hole's image. The host itself keeps asking those servers, not Pi-hole.
-3. Through [circuit-podman](https://github.com/conn3xorg/circuit-podman) v0.1.0, installs Podman and runs `docker.io/pihole/pihole:VERSION` as `pihole.service`: a Quadlet unit on the host network, with `/etc/pihole` on the named volume `pihole`. The password goes into `/etc/containers/env/pihole.env`, mode `0600`.
+3. Through [circuit-podman](https://github.com/conn3xorg/circuit-podman) v0.1.2, installs Podman and runs `docker.io/pihole/pihole:VERSION` as `pihole.service`: a Quadlet unit on the host network, with `/etc/pihole` on the named volume `pihole`. The password goes into `/etc/containers/env/pihole.env`, mode `0600`.
 4. Waits for port 53. On its first start the container builds gravity from Pi-hole's default list, [StevenBlack's hosts](https://github.com/StevenBlack/hosts), before it opens the port, which takes a minute or two.
 5. Adds `blocklists` to gravity's database, removes lists the circuit added before that you've since taken out, and runs `pihole -g` to rebuild gravity. When the lists already match, it does nothing.
 
