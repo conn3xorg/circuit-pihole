@@ -133,6 +133,19 @@ circuit "pihole" {
     }
   }
 
+  # A new image or setting restarts the container, and wait_for doesn't run
+  # again for that, so without this the apply ends before Pi-hole answers
+  # and the next plan finds port 53 closed.
+  step "restarted" {
+    command {
+      command = "for _ in $(seq 300); do awk '$4 == \"0A\" && $2 ~ /:0035$/ { f = 1 } END { exit !f }' /proc/net/tcp /proc/net/tcp6 2>/dev/null && exit 0; sleep 2; done; echo 'Pi-hole did not listen on port 53 within 10 minutes of restarting.' >&2; exit 1"
+      triggers = {
+        image       = "${var.pihole_version}@${var.image_digest}"
+        environment = sha256(jsonencode(local.environment))
+      }
+    }
+  }
+
   # Adds the lists in blocklists, removes the ones this circuit added before
   # that aren't any more, then rebuilds gravity. A list that was already
   # there from the web interface becomes the circuit's.
