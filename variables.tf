@@ -35,6 +35,7 @@ variable "ssh_become" {
 variable "pihole_version" {
   type        = string
   default     = "2026.10.0"
+  nullable    = false
   description = "Tag of the docker.io/pihole/pihole image, such as \"2026.10.0\". Each tag pins Pi-hole's core, web interface and FTL together."
 
   validation {
@@ -131,6 +132,7 @@ variable "web_port" {
 variable "image_digest" {
   type        = string
   default     = "sha256:d34134716fc32038b052a8674c7c6879e0ff21f0e6d8af345166fffa2c27c113"
+  nullable    = false
   description = "Digest of the image for pihole_version. Podman pulls by the digest, so change it with the version."
 
   validation {

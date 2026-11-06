@@ -9,6 +9,18 @@ variable "web_password" {
   ephemeral = true
 }
 
+# CI sets these to install an older release first, then upgrades to the
+# circuit's own pin by applying again without them.
+variable "pihole_version" {
+  type    = string
+  default = null
+}
+
+variable "image_digest" {
+  type    = string
+  default = null
+}
+
 module "pihole" {
   source = "../.."
 
@@ -16,6 +28,8 @@ module "pihole" {
   ssh_port             = var.port
   ssh_private_key_file = "./id_ed25519"
   ssh_known_hosts_file = "./known_hosts"
+  pihole_version       = var.pihole_version
+  image_digest         = var.image_digest
 
   web_password = var.web_password
   upstream_dns = ["1.1.1.1", "9.9.9.9"]
