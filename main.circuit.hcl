@@ -88,7 +88,7 @@ circuit "resolver" {
 # host's interfaces. Gravity, the query log and the settings it writes live
 # in the pihole volume and survive a new image.
 module "podman" {
-  source = "github.com/conn3xorg/circuit-podman?ref=v0.1.0"
+  source = "github.com/conn3xorg/circuit-podman?ref=v0.1.2"
 
   depends_on = [conn3x_command.resolver__resolv_conf]
 
