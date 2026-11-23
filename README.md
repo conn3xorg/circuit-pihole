@@ -120,7 +120,7 @@ Blocklists the circuit adds carry the comment `Managed by Conn3x`. Lists you add
 
 ## Requirements
 
-Requires Conn3x v0.6.5 or later and systemd on each host. The image is built for amd64 and arm64, and for 32-bit ARM, i386 and riscv64, which haven't been tried. Each host needs to reach its package mirror, Docker Hub, GitHub and the blocklists' servers. `conn3x init` fetches circuit-podman from GitHub.
+Requires Conn3x v0.30.0 or later and systemd on each host. The image is built for amd64 and arm64, and for 32-bit ARM, i386 and riscv64, which haven't been tried. Each host needs to reach its package mirror, Docker Hub, GitHub and the blocklists' servers. `conn3x init` fetches circuit-podman from GitHub.
 
 Pi-hole's own sizing applies: 1 GB of memory and a couple of GB of disk are plenty for a home network.
 
